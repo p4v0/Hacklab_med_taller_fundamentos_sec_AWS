@@ -25,16 +25,16 @@ for region in $ALL_REGIONS; do
 done
 
 # Mostrar regiones habilitadas sin las excluidas
-echo "Regiones filtradas (excluyendo las especificadas):"
+echo "Regiones filtradas (excluyendo las especificadas en EXCLUDED_REGIONS):"
 echo "---------------------------------------------------"
 echo "$FILTERED_REGIONS" | tr ' ' '\n' | grep -v '^$'
 echo "---------------------------------------------------"
 echo "Regiones excluidas: $EXCLUDED_REGIONS" | tr ' ' '\n' | grep -v '^$'
 
 # Solicitar confirmación al usuario antes de eliminar VPCs
-echo "\n¡ADVERTENCIA! Se eliminarán las VPCs por defecto en las siguientes regiones:"
+echo "¡ADVERTENCIA! Se eliminarán las VPCs por defecto en las siguientes regiones:"
 echo "$FILTERED_REGIONS" | tr ' ' '\n' | grep -v '^$'
-echo "\nEsta acción es IRREVERSIBLE. ¿Desea continuar? (y/n): "
+echo "Esta acción es IRREVERSIBLE. ¿Desea continuar? (y/n): "
 read -r CONFIRMATION
 
 if [[ ! "$CONFIRMATION" =~ ^[Yy]$ ]]; then
@@ -43,7 +43,7 @@ if [[ ! "$CONFIRMATION" =~ ^[Yy]$ ]]; then
 fi
 
 # Eliminar VPC por defecto en las regiones filtradas
-echo "\nEliminando VPCs por defecto en las regiones filtradas..."
+echo "Eliminando VPCs por defecto en las regiones filtradas..."
 echo "---------------------------------------------------"
 
 for region in $FILTERED_REGIONS; do
