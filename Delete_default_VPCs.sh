@@ -1,79 +1,86 @@
 #!/bin/bash
 
-# Regiones que NO quieres afectar, OJITO!!!
-EXCLUIR_REGIONES=("us-east-1" "us-west-2")
+# Lista de regiones a excluir (donde sí uses VPCs por defecto y NO quieras que se borren) (separadas por espacios)
+EXCLUDED_REGIONS="ap-northeast-3 ap-northeast-2 ap-northeast-1 ca-central-1 sa-east-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1 us-west-2"
 
-# Obtener todas las regiones habilitadas en la cuenta (opt-in-not-required u opted-in)
-TODAS_REGIONES=$(aws ec2 describe-regions \
-  --filters "Name=opt-in-status,Values=opt-in-not-required,opted-in" \
-  --query "Regions[].RegionName" --output text)
+# Obtener todas las regiones habilitadas en la cuenta
+echo "Obteniendo regiones habilitadas en la cuenta AWS..."
+ALL_REGIONS=$(aws ec2 describe-regions --query "Regions[*].RegionName" --output text)
 
-# Filtrar regiones excluidas
-REGIONES_FILTRADAS=()
-for REGION in $TODAS_REGIONES; do
-  if [[ ! " ${EXCLUIR_REGIONES[*]} " =~ " ${REGION} " ]]; then
-    REGIONES_FILTRADAS+=("$REGION")
-  fi
+# Mostrar todas las regiones habilitadas
+echo "Todas las regiones habilitadas:"
+echo "---------------------------------------------------"
+echo "$ALL_REGIONS" | tr '\t' '\n'
+echo "---------------------------------------------------"
+
+# Inicializar variable para regiones filtradas
+FILTERED_REGIONS=""
+
+# Recorrer todas las regiones habilitadas y filtrar las excluidas
+for region in $ALL_REGIONS; do
+    # Verificar si la región está en la lista de excluidas
+    if [[ ! " $EXCLUDED_REGIONS " =~ " $region " ]]; then
+        FILTERED_REGIONS="$FILTERED_REGIONS $region"
+    fi
 done
 
-# Loop principal: eliminar VPC por defecto y sus dependencias
-for REGION in "${REGIONES_FILTRADAS[@]}"; do
-  echo "Procesando región: $REGION"
+# Mostrar regiones habilitadas sin las excluidas
+echo "Regiones filtradas (excluyendo las especificadas):"
+echo "---------------------------------------------------"
+echo "$FILTERED_REGIONS" | tr ' ' '\n' | grep -v '^$'
+echo "---------------------------------------------------"
+echo "Regiones excluidas: $EXCLUDED_REGIONS" | tr ' ' '\n' | grep -v '^$'
 
-  # Obtener VPC por defecto
-  VPC_ID=$(aws ec2 describe-vpcs --region "$REGION" \
-    --filters Name=isDefault,Values=true \
-    --query "Vpcs[0].VpcId" --output text)
+# Solicitar confirmación al usuario antes de eliminar VPCs
+echo "\n¡ADVERTENCIA! Se eliminarán las VPCs por defecto en las siguientes regiones:"
+echo "$FILTERED_REGIONS" | tr ' ' '\n' | grep -v '^$'
+echo "\nEsta acción es IRREVERSIBLE. ¿Desea continuar? (y/n): "
+read -r CONFIRMATION
 
-  if [[ "$VPC_ID" == "None" ]]; then
-    echo "No hay VPC por defecto en $REGION"
-    continue
-  fi
+if [[ ! "$CONFIRMATION" =~ ^[Yy]$ ]]; then
+    echo "Operación cancelada por el usuario."
+    exit 0
+fi
 
-  echo "VPC por defecto encontrada: $VPC_ID"
+# Eliminar VPC por defecto en las regiones filtradas
+echo "\nEliminando VPCs por defecto en las regiones filtradas..."
+echo "---------------------------------------------------"
 
-  # Eliminar subnets
-  SUBNETS=$(aws ec2 describe-subnets --region "$REGION" \
-    --filters Name=vpc-id,Values="$VPC_ID" \
-    --query "Subnets[].SubnetId" --output text)
-
-  for SUBNET in $SUBNETS; do
-    echo "Eliminando subnet: $SUBNET"
-    aws ec2 delete-subnet --subnet-id "$SUBNET" --region "$REGION"
-  done
-
-  # Eliminar gateways (Internet Gateways)
-  GATEWAYS=$(aws ec2 describe-internet-gateways --region "$REGION" \
-    --filters Name=attachment.vpc-id,Values="$VPC_ID" \
-    --query "InternetGateways[].InternetGatewayId" --output text)
-
-  for GW in $GATEWAYS; do
-    echo "Desasociando y eliminando IGW: $GW"
-    aws ec2 detach-internet-gateway --internet-gateway-id "$GW" --vpc-id "$VPC_ID" --region "$REGION"
-    aws ec2 delete-internet-gateway --internet-gateway-id "$GW" --region "$REGION"
-  done
-
-  # Eliminar grupos de seguridad (excepto el default)
-  SG_IDS=$(aws ec2 describe-security-groups --region "$REGION" \
-    --filters Name=vpc-id,Values="$VPC_ID" \
-    --query "SecurityGroups[?GroupName!='default'].GroupId" --output text)
-
-  for SG in $SG_IDS; do
-    echo "Eliminando SG: $SG"
-    aws ec2 delete-security-group --group-id "$SG" --region "$REGION"
-  done
-
-  # Eliminar tablas de rutas (excepto las asociadas automáticamente)
-  RTB_IDS=$(aws ec2 describe-route-tables --region "$REGION" \
-    --filters Name=vpc-id,Values="$VPC_ID" \
-    --query "RouteTables[?Associations[?Main!=true]].RouteTableId" --output text)
-
-  for RTB in $RTB_IDS; do
-    echo "Eliminando tabla de rutas: $RTB"
-    aws ec2 delete-route-table --route-table-id "$RTB" --region "$REGION"
-  done
-
-  # Finalmente, eliminar la VPC
-  echo "Eliminando VPC: $VPC_ID"
-  aws ec2 delete-vpc --vpc-id "$VPC_ID" --region "$REGION"
+for region in $FILTERED_REGIONS; do
+    echo "Procesando región: $region"
+    
+    # Obtener IDs de las VPCs por defecto en la región
+    DEFAULT_VPCS=$(aws ec2 describe-vpcs --region $region --filters Name=isDefault,Values=true --query "Vpcs[*].VpcId" --output text)
+    
+    if [ -z "$DEFAULT_VPCS" ]; then
+        echo "  No se encontró VPC por defecto en $region"
+        continue
+    fi
+    
+    for vpc in $DEFAULT_VPCS; do
+        echo "  Eliminando VPC por defecto $vpc en $region"
+        
+        # Eliminar subnets asociadas
+        SUBNETS=$(aws ec2 describe-subnets --region $region --filters Name=vpc-id,Values=$vpc --query "Subnets[*].SubnetId" --output text)
+        for subnet in $SUBNETS; do
+            echo "    Eliminando subnet $subnet"
+            aws ec2 delete-subnet --region $region --subnet-id $subnet
+        done
+        
+        # Eliminar Internet Gateways asociados
+        IGWs=$(aws ec2 describe-internet-gateways --region $region --filters Name=attachment.vpc-id,Values=$vpc --query "InternetGateways[*].InternetGatewayId" --output text)
+        for igw in $IGWs; do
+            echo "    Desvinculando y eliminando Internet Gateway $igw"
+            aws ec2 detach-internet-gateway --region $region --internet-gateway-id $igw --vpc-id $vpc
+            aws ec2 delete-internet-gateway --region $region --internet-gateway-id $igw
+        done
+        
+        # Eliminar la VPC
+        echo "    Eliminando VPC $vpc"
+        aws ec2 delete-vpc --region $region --vpc-id $vpc
+        echo "  VPC por defecto eliminada en $region"
+    done
 done
+
+echo "---------------------------------------------------"
+echo "Proceso completado"
