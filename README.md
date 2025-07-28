@@ -103,7 +103,7 @@ Para todas las demás operaciones, usa usuarios, roles u otras identidades de IA
 
 ![root access keys](Imgs/Security_creds.png)
 
-![root access keys](Imgs/Security_creds_root.png)
+![root access keys 2](Imgs/Security_creds_root.png)
 
 En el pasado, al crear la cuenta, AWS creaba una Access Key asociada al root. Ahora, ya no lo hace, pero si tienes una cuenta creada antes de 2023, es posible que aún tengas una Access Key asociada al root. Si es así, elimínala... No se necesita para nada y es un riesgo de seguridad (que el mismo AWS introducía en cada nueva cuenta).
 
