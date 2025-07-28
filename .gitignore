@@ -1,0 +1,21 @@
+# Archivos y carpetas de sistema
+Thumbs.db
+.DS_Store
+
+# Archivos temporales y de backup
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Archivos de entorno y configuración local
+.env
+*.env
+
+# Archivos generados por editores
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de AWS CLI y credenciales
+.aws/
