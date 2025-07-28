@@ -87,7 +87,7 @@ Asegúrate de que el correo electrónico de root esté vinculado a una direcció
 
 Actualiza tus contactos alternativos para asegurarte de que los equipos/personas correctas reciban notificaciones relacionadas con Facturación, Operaciones y Seguridad.
 
-> Para este taller, no es necesario configurarlos, pero, igual que con el email de root, en la vida real todos los emails acá deberían configurarse como alias que no dependan de una sola persona. Por ejemplo: El contacto de seguridad puede ser security@MiEmpresa.com, en lugar de uno asociado a una sola persona como El.Man.De:Seguridad@MiEmpresa.com.
+> Para este taller, no es necesario configurarlos, pero, igual que con el email de root, en la vida real todos los emails acá deberían configurarse como alias que no dependan de una sola persona. Por ejemplo: El contacto de seguridad puede ser security@MiEmpresa.com, en lugar de uno asociado a una sola persona como El-Man-De-Seguridad@MiEmpresa.com.
 
 **El costo de este control es gratis**
 
@@ -131,7 +131,7 @@ A estas alturas de la vida, creo que sobra decir por qué debemos usar MFA en el
 
 ![open IAM](Imgs/Open_IAM.png)
 
-![open IAM user](Imgs/Open_IAM_users.png)
+![open IAM user](Imgs/Open_IAM_Users.png)
 
 ![clic IAM user](Imgs/clic-IAM-user.png)
 
