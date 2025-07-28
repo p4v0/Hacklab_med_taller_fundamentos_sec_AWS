@@ -101,9 +101,9 @@ Para todas las demás operaciones, usa usuarios, roles u otras identidades de IA
 
 #### 5.1. Revisar que no haya Access Keys asociadas al root
 
-![root access keys](Imgs/Security_creds.png)
+![root access keys](Imgs/security_creds.png)
 
-![root access keys 2](Imgs/Security_creds_root.png)
+![root access keys 2](Imgs/security_creds_root.png)
 
 En el pasado, al crear la cuenta, AWS creaba una Access Key asociada al root. Ahora, ya no lo hace, pero si tienes una cuenta creada antes de 2023, es posible que aún tengas una Access Key asociada al root. Si es así, elimínala... No se necesita para nada y es un riesgo de seguridad (que el mismo AWS introducía en cada nueva cuenta).
 
@@ -111,7 +111,7 @@ En el pasado, al crear la cuenta, AWS creaba una Access Key asociada al root. Ah
 
 #### 5.2. Configurar MFA para el root
 
-![root access keys](Imgs/Security_creds.png)
+![root access keys](Imgs/security_creds.png)
 
 ![root MFA](Imgs/Security_creds_root_MFA.png)
 
@@ -129,9 +129,9 @@ A estas alturas de la vida, creo que sobra decir por qué debemos usar MFA en el
 
 #### 6. Configurar MFA para el admin de la cuenta
 
-![open IAM](Imgs/open_IAM.png)
+![open IAM](Imgs/Open_IAM.png)
 
-![open IAM user](Imgs/open_IAM_users.png)
+![open IAM user](Imgs/Open_IAM_users.png)
 
 ![clic IAM user](Imgs/clic-IAM-user.png)
 
