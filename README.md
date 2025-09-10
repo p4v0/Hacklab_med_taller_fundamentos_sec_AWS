@@ -25,7 +25,7 @@ En minutos deberías recibir este correo (guárdalo, lo necesitarás luego), si 
 
 ![Correo de bienvenida AWS](Imgs/singin_AWS.png)
 
-> **Nota:** Problemas comunes incluyen: que AWS te diga que tu correo ya está asociado a una cuenta de AWS, en ese caso, crea un nuevo correo y trata con ese. Que el número no es válido (aún cuando lo es), en ese caso, prueba con otro número o contacta a soporte de AWS.
+> ****Nota:** Problemas comunes incluyen: que AWS te diga que tu correo ya está asociado a una cuenta de AWS, en ese caso, crea un nuevo correo y trata con ese. Que el número no es válido (aún cuando lo es), en ese caso, prueba con otro número o contacta a soporte de AWS.
 
 ---
 
