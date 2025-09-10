@@ -52,7 +52,7 @@ Por la seguridad... de nuestros ojitos :D
 - Configura una alarma que nos avisa si se inicia sesión con la cuenta root (**El costo de este control es gratis**)
 - Despliega un bucket de S3 para guardar los logs de CloudTrail más allá de los 3 meses que ofrece gratis sin configurarle nada
 
-  - **El costo de este control NO es gratis, aunque es poco**: [AWS dice esto](https://catalog.workshops.aws/startup-security-baseline/en-US/b-securing-your-account/b1-automateddeployment/0-automateddeployment#cost):**
+  - **El costo de este control NO es gratis, aunque es poco: [AWS dice esto](https://catalog.workshops.aws/startup-security-baseline/en-US/b-securing-your-account/b1-automateddeployment/0-automateddeployment#cost):**
 
     > Almacenar registros en S3 generará algunos costos. Estimando 5,000 llamadas API por día para una sola cuenta de AWS y cada llamada API genera 3KB de registros, un mes de registros ocupará 450MB de espacio. En un año, acumularás aproximadamente 5.4GB de registros... [que] cuesta alrededor de $0.023 por GB por mes. Por lo tanto, el costo de los registros después de un año será de 12 centavos al mes, o aproximadamente $1.50 por año
 
