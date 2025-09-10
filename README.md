@@ -4,7 +4,7 @@
 
 ## ¿Qué hicimos en el taller, parte 1?
 
-En esta primera parte, creamos una cuenta de AWS para el lan y tomamos acciones para asegurarla: **Lo primero que deberíamos hacer siempre al crear una cuenta de AWS**.
+En esta primera parte, creamos una cuenta de AWS para el lab y tomamos acciones para asegurarla: **Lo primero que deberíamos hacer siempre al crear una cuenta de AWS**.
 
 ### 1. Creamos una cuenta gratuita de AWS
 
