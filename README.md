@@ -56,7 +56,7 @@ Por la seguridad... de nuestros ojitos :D
 
     > Almacenar registros en S3 generará algunos costos. Estimando 5,000 llamadas API por día para una sola cuenta de AWS y cada llamada API genera 3KB de registros, un mes de registros ocupará 450MB de espacio. En un año, acumularás aproximadamente 5.4GB de registros... [que] cuesta alrededor de $0.023 por GB por mes. Por lo tanto, el costo de los registros después de un año será de 12 centavos al mes, o aproximadamente $1.50 por año
 
-    Esto tuvimos que activarlo al lanzar la plantilla (con el parámetro `ShouldDeployCloudTrail=true`) porque vimos en el lab que daba error si no se activaba. Pero puedes evitar los costos borrando manualmente desde tu consola de AWS:
+    Esto tuvimos que activarlo al lanzar la plantilla (con el parámetro `ShouldDeployCloudTrail=true`) porque vimos en el lab que daba error si no se activaba. Pero puedes evitar los costos borrando manualmente desde tu consola de AWS (**ten en cuenta que si borras esto, no recibirás emails de alerta por login del root**):
 
     - el trail creado desde `CloudTrail/Trails/ManagementEventsTrail/Delete`
     - el bucket llamado `security-baseline-s3bucketforcloudtrailcloudtrail-...`
